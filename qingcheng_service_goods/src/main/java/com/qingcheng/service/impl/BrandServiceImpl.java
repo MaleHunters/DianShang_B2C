@@ -41,6 +41,21 @@ public class BrandServiceImpl implements BrandService {
    * 条件查询
    */
   public List<Brand> findList(Map<String, Object> searchMap) {
+    Example example = createExample(searchMap);
+
+    return brandMapper.selectByExample(example);
+
+  }
+
+  @Override
+  public PageResult<Brand> findPage(Map<String, Object> searchMap, int page, int size) {
+    PageHelper.startPage(page, size);
+    Example example = createExample(searchMap);
+    Page<Brand> pageResult = (Page<Brand>)brandMapper.selectByExample(example);
+    return new PageResult<>(pageResult.getTotal(),pageResult.getResult());
+  }
+  private Example createExample(Map<String, Object> searchMap){
+
     Example example = new Example(Brand.class);
     Example.Criteria criteria = example.createCriteria();
     if (searchMap != null){
@@ -53,8 +68,7 @@ public class BrandServiceImpl implements BrandService {
         criteria.andEqualTo("letter",(String)searchMap.get("letter"));
       }
     }
-    return brandMapper.selectByExample(example);
-
+    return example;
   }
 
 }

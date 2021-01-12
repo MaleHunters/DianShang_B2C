@@ -36,4 +36,9 @@ public class BrandController {
   public List<Brand> findList(@RequestBody Map searchMap){
     return brandService.findList(searchMap);
   }
+  @PostMapping("/findPage")
+  public PageResult<Brand> findPage(@RequestBody Map searchMap ,int page, int size){
+    return brandService.findPage(searchMap,page,size);
+
+  }
 }
