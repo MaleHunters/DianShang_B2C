@@ -12,6 +12,7 @@
         <module>qingcheng_common_service</module>
         <module>qingcheng_common_web</module>
         <module>qingcheng_pojo</module>
+        <module>qingcheng_interface</module>
     </modules>
     <packaging>pom</packaging>
     <!-- 集中定义依赖版本号 -->

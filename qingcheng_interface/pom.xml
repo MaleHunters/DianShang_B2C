@@ -9,15 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>qingcheng_pojo</artifactId>
-    <dependencies>
-        <!--注解-->
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+    <artifactId>qingcheng_interface</artifactId>
+
 
 </project>
