@@ -11,7 +11,9 @@ import java.util.List;
  * @version: 1.0
  */
 public class PageResult<T> implements Serializable {
+  // 记录数
   private Long total;
+  //结果集
   private List<T> rows;
 
   public Long getTotal() {

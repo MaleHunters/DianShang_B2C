@@ -24,29 +24,28 @@ import java.util.Map;
 public class BrandServiceImpl implements BrandService {
   @Autowired
   private BrandMapper brandMapper;
+  // 查询全部
   @Override
   public List<Brand> findAll() {
     return brandMapper.selectAll();
   }
-
+  // 分页查询
   @Override
   public PageResult<Brand> findPage(int page, int size) {
+    //pageHelper的分页后面一定紧跟查询语句，对其进行分页的操作
     PageHelper.startPage(page, size);
     Page<Brand> pageResult = (Page<Brand>)brandMapper.selectAll();
     return new PageResult<>(pageResult.getTotal(),pageResult.getResult());
   }
-
+  // 条件查询
   @Override
-  /**
-   * 条件查询
-   */
   public List<Brand> findList(Map<String, Object> searchMap) {
+    //条件的设置
     Example example = createExample(searchMap);
-
+    //对设置的条件进行查询
     return brandMapper.selectByExample(example);
-
   }
-
+  //分页+条件查询
   @Override
   public PageResult<Brand> findPage(Map<String, Object> searchMap, int page, int size) {
     PageHelper.startPage(page, size);
@@ -54,6 +53,30 @@ public class BrandServiceImpl implements BrandService {
     Page<Brand> pageResult = (Page<Brand>)brandMapper.selectByExample(example);
     return new PageResult<>(pageResult.getTotal(),pageResult.getResult());
   }
+
+  @Override
+  public Brand findById(Integer id) {
+    return brandMapper.selectByPrimaryKey(id);
+  }
+
+  @Override
+  public void add(Brand brand) {
+    brandMapper.insert(brand);
+
+  }
+
+  @Override
+  public void update(Brand brand) {
+    brandMapper.updateByPrimaryKeySelective(brand);
+
+  }
+
+  @Override
+  public void delete(Integer id) {
+    brandMapper.deleteByPrimaryKey(id);
+
+  }
+
   private Example createExample(Map<String, Object> searchMap){
 
     Example example = new Example(Brand.class);
