@@ -56,7 +56,7 @@ public class BrandController {
     brandService.update(brand);
     return new Result();
   }
-  @PostMapping("/delete")
+  @GetMapping("/delete")
   public Result delete(Integer id){
     brandService.delete(id);
     return new Result();
