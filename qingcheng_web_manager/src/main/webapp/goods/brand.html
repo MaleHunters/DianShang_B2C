@@ -8,6 +8,18 @@
 </head>
 <body>
 <div id="app">
+    <el-form :inline="true">
+       <el-form-item label="品牌名称">
+           <el-input placeholder="品牌名称" v-model="searchMap.name"></el-input>
+       </el-form-item>
+        <el-form-item label="品牌首字母">
+            <el-input placeholder="品牌首字母" v-model="searchMap.letter"></el-input>
+        </el-form-item>
+        <el-button type="primary" @click="fetchDatas">查询</el-button>
+<!--        <el-button @click="resetForm('ruleForm')">重置</el-button>-->
+
+
+    </el-form>
     <el-table
             :data="tableData"
             border
@@ -64,7 +76,11 @@
                 tableData:[],
                 currentPage:1,
                 size:10,
-                total:10
+                total:10,
+                searchMap:{
+                    "name":null,
+                    "letter":null
+                }
             }
         },
         created(){
@@ -76,10 +92,22 @@
             this.fetchData()
         },
         methods:{
+            // 分页查询
             fetchData(){
                 // axios.get('/brand/findPage.do?page='+ this.currentPage +'&size=' + this.size)
                 // es6
                 axios.get(`/brand/findPage.do?page=${this.currentPage}&size=${this.size}`).then(response => {
+                    this.tableData = response.data.rows;
+                    this.total = response.data.total;
+
+                })
+
+            },
+            // 条件分页查询
+            fetchDatas(){
+                // axios.get('/brand/findPage.do?page='+ this.currentPage +'&size=' + this.size)
+                // es6
+                axios.post(`/brand/findPage.do?page=${this.currentPage}&size=${this.size}`,this.searchMap).then(response => {
                     this.tableData = response.data.rows;
                     this.total = response.data.total;
 
