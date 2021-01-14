@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>品牌管理</title>
+    <!-- css的引入 -->
+    <link rel="stylesheet" href="../css/elementui.css">
+</head>
+<body>
+<div id="app">
+    <el-table
+            :data="tableData"
+            border
+            style="width: 100%">
+        <el-table-column
+                prop="id"
+                label="ID"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="name"
+                label="名称"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="letter"
+                label="首字母">
+        </el-table-column>
+        <el-table-column
+                label="图片"
+                width="180">
+            <template slot-scope="scope">
+                <img :src="scope.row.image">
+            </template>
+        </el-table-column>
+    </el-table>
+
+</div>
+</body>
+<!-- js的引入 -->
+<script src="../js/vue.js"></script>
+<script src="../js/elementui.js"></script>
+<script src="../js/axios.js"></script>
+<script>
+
+    new Vue({
+        el:"#app",
+        data(){
+            // 不使用return包裹的数据会在项目的全局可见，会造成变量的污染，
+            // 使用return包裹后数据的变量只在当前的组件中生效，不会影响其他的组件
+            return {
+                tableData:[]
+            }
+        },
+        created(){
+            // 使用回调函数function this不指向vue实例
+            axios.get('/brand/findAll.do').then(response => {
+                // alert(JSON.stringify(response));
+                this.tableData=response.data;
+
+            })
+        }
+
+    })
+
+
+
+
+</script>
+</html>
