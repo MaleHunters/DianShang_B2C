@@ -34,6 +34,18 @@
             </template>
         </el-table-column>
     </el-table>
+    <!-- size-change pagesize（每页的记录数）改变时会触发
+         current-change currentPage（当前页）改变时会触发
+         current-page 当前的页数-->
+    <el-pagination
+            @size-change="fetchData"
+            @current-change="fetchData"
+            :current-page.sync="currentPage"
+            :page-sizes="[10, 20, 30, 40]"
+            :page-size="size"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+    </el-pagination>
 
 </div>
 </body>
@@ -49,16 +61,31 @@
             // 不使用return包裹的数据会在项目的全局可见，会造成变量的污染，
             // 使用return包裹后数据的变量只在当前的组件中生效，不会影响其他的组件
             return {
-                tableData:[]
+                tableData:[],
+                currentPage:1,
+                size:10,
+                total:10
             }
         },
         created(){
-            // 使用回调函数function this不指向vue实例
-            axios.get('/brand/findAll.do').then(response => {
-                // alert(JSON.stringify(response));
-                this.tableData=response.data;
+            // // 使用回调函数function this不指向vue实例
+            // axios.get('/brand/findAll.do').then(response => {
+            //     // alert(JSON.stringify(response));
+            //     this.tableData=response.data;
+            //})
+            this.fetchData()
+        },
+        methods:{
+            fetchData(){
+                // axios.get('/brand/findPage.do?page='+ this.currentPage +'&size=' + this.size)
+                // es6
+                axios.get(`/brand/findPage.do?page=${this.currentPage}&size=${this.size}`).then(response => {
+                    this.tableData = response.data.rows;
+                    this.total = response.data.total;
 
-            })
+                })
+
+            }
         }
 
     })
