@@ -59,13 +59,14 @@
         </el-table-column>
         <el-table-column
                 prop="letter"
-                label="首字母">
+                label="首字母"
+                width="180">
         </el-table-column>
         <el-table-column
                 label="图片"
                 width="180">
             <template slot-scope="scope">
-                <img :src="scope.row.image">
+                <img width="100px" height="50px" :src="scope.row.image">
             </template>
         </el-table-column>
         <el-table-column
@@ -186,6 +187,7 @@
 
             },
             save() {
+                this.pojo.image = this.imageUrl;
                 axios.post(`/brand/${this.pojo.id == null ? 'add' : 'update'}.do`, this.pojo).then(response => {
                     this.formVisible = false;
                     this.fetchData();
@@ -198,6 +200,7 @@
                 this.formVisible=true;
                 axios.get(`/brand/findById.do?id=${id}`).then(response => {
                     this.pojo = response.data;
+                    this.imageUrl = this.pojo.image;
                 })
             },
             // 数据的删除
