@@ -5,6 +5,31 @@
     <title>品牌管理</title>
     <!-- css的引入 -->
     <link rel="stylesheet" href="../css/elementui.css">
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
@@ -76,7 +101,15 @@
                 <el-input placeholder="品牌首字母" v-model="pojo.letter"></el-input>
             </el-form-item>
             <el-form-item label="品牌图片">
-                <el-input placeholder="品牌图片" v-model="pojo.image"></el-input>
+                <el-upload
+                        class="avatar-uploader"
+                        action="/upload/native.do"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload">
+                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
             </el-form-item>
             <el-form-item label="品牌排序">
                 <el-input placeholder="品牌排序" v-model="pojo.seq"></el-input>
@@ -117,7 +150,8 @@
                     "letter":null,
                     "image":null,
                     "seq":null
-                }
+                },
+                imageUrl:''
             }
         },
         created(){
@@ -178,6 +212,22 @@
                         this.$alert('成功删除','提示');
                     })
                 });
+            },
+            handleAvatarSuccess(res, file) {
+                // file.response为上传文件返回的具体的地址
+                this.imageUrl = file.response;
+            },
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
             }
         }
     })
