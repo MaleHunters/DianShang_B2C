@@ -22,7 +22,7 @@ public class AlbumController {
   @Reference
   private AlbumService albumService;
 
-  @GetMapping
+  @GetMapping("/findAll")
   public List<Album> findAll(){
     return albumService.findAll();
   }
@@ -48,7 +48,7 @@ public class AlbumController {
     return new Result();
   }
   @PostMapping("/update")
-  public Result update(Album album){
+  public Result update(@RequestBody Album album){
     albumService.update(album);
     return new Result();
   }

@@ -4,7 +4,8 @@ import javax.persistence.Table;
 import java.io.Serializable;
 /**
  * spec实体类
- * @author Administrator
+ * 商品规格
+ * @author MaleHunter
  *
  */
 @Table(name="tb_spec")

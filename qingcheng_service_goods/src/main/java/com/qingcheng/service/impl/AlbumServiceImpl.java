@@ -99,7 +99,6 @@ public class AlbumServiceImpl implements AlbumService {
   @Override
   public void update(Album album) {
     albumMapper.updateByPrimaryKeySelective(album);
-
   }
 
   /**

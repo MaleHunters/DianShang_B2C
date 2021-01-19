@@ -4,7 +4,8 @@ import javax.persistence.Table;
 import java.io.Serializable;
 /**
  * spu实体类
- * @author Administrator
+ * 商品规格参数
+ * @author MaleHunter
  *
  */
 @Table(name="tb_spu")
