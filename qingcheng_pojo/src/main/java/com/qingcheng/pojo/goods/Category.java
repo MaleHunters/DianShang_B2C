@@ -4,7 +4,8 @@ import javax.persistence.Table;
 import java.io.Serializable;
 /**
  * category实体类
- * @author Administrator
+ * 商品分类
+ * @author MaleHunter
  *
  */
 @Table(name="tb_category")

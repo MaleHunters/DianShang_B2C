@@ -60,7 +60,7 @@
 <el-input v-model="searchMap.options" placeholder="选项" class="filter-item" ></el-input></el-form-item>
 
                 <el-button class="dalfBut" @click="fetchData()">查询</el-button>
-                <el-button type="primary"  class="butT" @click="formVisible=true;pojo={}">新增</el-button>
+                <el-button type="primary"  class="butT" @click="formVisible=true;pojo={templateId=tempateId}">新增</el-button>
                     <el-button type="primary"  onclick="location.href='template.html'"  >模板列表</el-button>
                 </el-form>
             </div>

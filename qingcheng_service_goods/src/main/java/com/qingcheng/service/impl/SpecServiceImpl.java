@@ -21,8 +21,11 @@ public class SpecServiceImpl implements SpecService {
     @Autowired
     private SpecMapper specMapper;
 
+   // @Autowired
+    //private TemplateMapper templateMapper;
     @Autowired
     private TemplateMapper templateMapper;
+
 
 
     /**
