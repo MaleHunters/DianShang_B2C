@@ -4,7 +4,8 @@ import javax.persistence.Table;
 import java.io.Serializable;
 /**
  * sku实体类
- * @author Administrator
+ * 商品库存进出等计量单位
+ * @author
  *
  */
 @Table(name="tb_sku")
@@ -12,9 +13,6 @@ public class Sku implements Serializable{
 
 	@Id
 	private String id;//商品id
-
-
-	
 
 	private String sn;//商品条码
 

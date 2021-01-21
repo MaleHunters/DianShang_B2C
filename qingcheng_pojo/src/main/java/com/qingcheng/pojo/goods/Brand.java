@@ -10,6 +10,7 @@ import java.io.Serializable;
  * @Package: com.qingcheng.pojo.goods
  * @CurrentProject: qingcheng_parent
  * @version: 1.0
+ * 品牌
  */
 @Table(name = "tb_brand")
 public class Brand implements Serializable {
