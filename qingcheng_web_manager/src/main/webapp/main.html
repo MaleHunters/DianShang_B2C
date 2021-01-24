@@ -96,7 +96,7 @@
 <script src="/js/axios.js"></script>
 <script src="js/vue.js"></script><!-- vue -->
 <script src="js/elementui.js"></script><!-- element-ui -->
-<script src="js/menu.js"></script><!-- 导航菜单 -->
+<!--<script src="js/menu.js"></script>&lt;!&ndash; 导航菜单 &ndash;&gt;-->
 <script>
     // 左侧菜单组件
     Vue.component('sidebar-item', {
@@ -158,15 +158,23 @@
                 this.linkUrl=linkUrl
                 this.defaultActiveIndex=activeIndex
             }
+
+            // 加载菜单数据
+            axios.get(`/menu/findMenu.do`).then( response => {
             // 获取导航数据
-            this.menuList=menu.data
+            this.menuList=response.data
             // 导航默认选择
-            this.data=menu.data[1]
+            this.data=response.data[1]
             let data=[]
 			for(let i=0;i<this.data.children.length;i++){
-				data.push(this.data.children[i].path)				
+				data.push(this.data.children[i].path)
 			}
 			this.openeds=data
+
+            })
+
+
+
         },
         methods: {
             handleOpen(key, keyPath) {
