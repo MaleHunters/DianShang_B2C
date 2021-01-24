@@ -16,7 +16,7 @@ import java.util.Date;
  */
 @Component
 public class OrderTask {
-  @Scheduled(cron = "* * * * * ?")
+  @Scheduled(cron = "* * 2 * * ?")
   public  void orderTimeOutLogic(){
     System.out.println(new Date());
   }
