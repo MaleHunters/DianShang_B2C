@@ -22,6 +22,10 @@
         <logout/>
         <!-- 解决403错误 关闭验证跨站请求伪造 -->
         <csrf disabled="true"></csrf>
+        <!-- 同源策略-->
+        <headers>
+            <frame-options policy="SAMEORIGIN"></frame-options>
+        </headers>
 
     </http>
 
