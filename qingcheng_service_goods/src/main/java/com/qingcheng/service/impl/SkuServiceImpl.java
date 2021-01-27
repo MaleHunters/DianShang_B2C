@@ -6,7 +6,10 @@ import com.qingcheng.dao.SkuMapper;
 import com.qingcheng.entity.PageResult;
 import com.qingcheng.pojo.goods.Sku;
 import com.qingcheng.service.goods.SkuService;
+import com.qingcheng.util.Cachekey;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.transaction.jta.WebSphereUowTransactionManager;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
@@ -87,12 +90,53 @@ public class SkuServiceImpl implements SkuService {
         skuMapper.updateByPrimaryKeySelective(sku);
     }
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**
      *  删除
      * @param id
      */
+    @Override
     public void delete(String id) {
         skuMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public void saveAllPriceToRedis() {
+        if (!redisTemplate.hasKey(Cachekey.SKU_PRICE)) {
+            System.out.println("商品价格缓存预热");
+            // 查询所有的商品的价格
+            List<Sku> skuList = skuMapper.selectAll();
+            for (Sku sku : skuList) {
+                if ("1".equals(sku.getStatus())) {
+                    // 装入缓存
+                    redisTemplate.boundHashOps(Cachekey.SKU_PRICE).put(sku.getId(), sku.getPrice());
+                }
+            }
+
+
+        } else {
+            System.out.println("已存在价格，跳过了缓存预热");
+            System.out.println(redisTemplate.boundHashOps(Cachekey.SKU_PRICE).get("27493450926") );
+        }
+
+    }
+
+    @Override
+    public Integer findPrice(String id) {
+      return (Integer)redisTemplate.boundHashOps(Cachekey.SKU_PRICE).get(id);
+    }
+
+    @Override
+    public void savePriceToRedisByid(String id, Integer price) {
+        redisTemplate.boundHashOps(Cachekey.SKU_PRICE).put(id,price);
+    }
+
+    @Override
+    public void deletePriceFromRedis(String id) {
+      redisTemplate.boundHashOps(Cachekey.SKU_PRICE).delete(id);
+
     }
 
     /**
