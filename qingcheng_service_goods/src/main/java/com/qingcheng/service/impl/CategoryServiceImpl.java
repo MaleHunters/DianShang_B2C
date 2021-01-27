@@ -6,7 +6,10 @@ import com.qingcheng.dao.CategoryMapper;
 import com.qingcheng.entity.PageResult;
 import com.qingcheng.pojo.goods.Category;
 import com.qingcheng.service.goods.CategoryService;
+import com.qingcheng.util.Cachekey;
+import org.apache.ibatis.cache.CacheKey;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
@@ -79,6 +82,8 @@ public class CategoryServiceImpl implements CategoryService {
      */
     public void add(Category category) {
         categoryMapper.insert(category);
+        // 数据修改后重新进行缓存预热
+        saveCategoryTreeToRedis();
     }
 
     /**
@@ -87,6 +92,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     public void update(Category category) {
         categoryMapper.updateByPrimaryKeySelective(category);
+        saveCategoryTreeToRedis();
     }
 
     /**
@@ -103,6 +109,8 @@ public class CategoryServiceImpl implements CategoryService {
             throw new RuntimeException("存在下级分类不能删除");
         }
         categoryMapper.deleteByPrimaryKey(id);
+        saveCategoryTreeToRedis();
+
     }
 
     /**
@@ -112,12 +120,34 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Map> findCategortyTree() {
         // 查询is_show=1的
+//        Example example = new Example(Category.class);
+//        Example.Criteria criteria = example.createCriteria();
+//        criteria.andEqualTo("isShow","1");
+//        example.setOrderByClause("seq");
+//        List<Category> categoryList = categoryMapper.selectByExample(example);
+//        return findByParentId(categoryList,0);
+      // 通过缓存提取分类
+        System.out.println("从缓存中提取");
+        return (List<Map>)redisTemplate.boundValueOps(Cachekey.CATEGORY_TREE).get();
+    }
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Override
+    public void saveCategoryTreeToRedis() {
+      // 查询商品分类导航
+        // 查询is_show=1的
         Example example = new Example(Category.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isShow","1");
         example.setOrderByClause("seq");
         List<Category> categoryList = categoryMapper.selectByExample(example);
-        return findByParentId(categoryList,0);
+        List<Map> categoryTree = findByParentId(categoryList, 0);
+
+        // 存入redis
+      redisTemplate.boundValueOps(Cachekey.CATEGORY_TREE).set(categoryTree);
+
     }
 
     private List<Map> findByParentId(List<Category> categoryList,Integer parentId){
